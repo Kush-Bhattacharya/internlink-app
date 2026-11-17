@@ -1,7 +1,7 @@
 # InternLink — High-School & University Internship Platform
 
 [![Live Demo](https://img.shields.io/badge/Live%20Simulation-Try%20on%20iPhone-2E7D32?style=for-the-badge&logo=apple)](https://kush-bhattacharya.github.io/internlink-app/)
-[![Android APK](https://img.shields.io/badge/Download-Android%20APK-1D4ED8?style=for-the-badge&logo=android)](https://github.com/Kush-Bhattacharya/internlink-app/releases)
+[![Android APK](https://img.shields.io/badge/Download-Android%20APK%20(v1.0.0)-1D4ED8?style=for-the-badge&logo=android)](https://github.com/Kush-Bhattacharya/internlink-app/releases/download/v1.0.0/InternLink-v1.0.0.apk)
 [![Feedback Form](https://img.shields.io/badge/Feedback-Google%20Form-F59E0B?style=for-the-badge&logo=googleforms)](https://forms.gle/2DrixK9M2mWgT9CQA)
 [![Platform](https://img.shields.io/badge/Platform-React%20Native%20%7C%20Expo%20%7C%20Firebase-0F172A?style=for-the-badge&logo=react)](https://kush-bhattacharya.github.io/internlink-app/)
 
@@ -26,9 +26,8 @@ Just like Samsung's "Try Galaxy on iPhone" experience, you can run a full-screen
 
 ### Method 2: Install Standalone Android App (`.apk`)
 For users with an Android phone or Android emulator:
-1. Go to the **[Releases Tab](https://github.com/Kush-Bhattacharya/internlink-app/releases)**.
-2. Download the latest **`application.apk`**.
-3. Open the downloaded file on your device and tap **Install** (allow "Install from unknown sources" if prompted).
+1. Go to the **[Releases Tab](https://github.com/Kush-Bhattacharya/internlink-app/releases)** or click **[Direct Download: InternLink-v1.0.0.apk](https://github.com/Kush-Bhattacharya/internlink-app/releases/download/v1.0.0/InternLink-v1.0.0.apk)** (~103 MB).
+2. Open the downloaded `.apk` file on your device and tap **Install** (allow "Install from unknown sources" if prompted).
 
 ---
 
