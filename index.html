@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>InternLink — Mobile Experience Simulation</title>
+  
+  <!-- PWA & Apple Mobile Web App Configuration -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="InternLink">
+  <link rel="apple-touch-icon" href="assets/icon.png">
+  <link rel="icon" type="image/png" href="assets/icon.png">
+  <meta name="theme-color" content="#2E7D32">
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #2E7D32;
+      --primary-light: #4CAF50;
+      --primary-bg: #E8F5E9;
+      --slate-900: #0F172A;
+      --slate-700: #334155;
+      --slate-500: #64748B;
+      --slate-200: #E2E8F0;
+      --slate-100: #F1F5F9;
+      --surface: #FFFFFF;
+      --background: #F8FAFC;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background: #0B132B;
+      color: var(--slate-900);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
+    }
+
+    /* Desktop Showcase Wrapper */
+    .showcase-container {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 1200px;
+      padding: 40px 20px;
+      gap: 60px;
+    }
+
+    .showcase-info {
+      flex: 1;
+      max-width: 520px;
+      color: #FFFFFF;
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(76, 175, 80, 0.2);
+      border: 1px solid rgba(76, 175, 80, 0.4);
+      padding: 6px 14px;
+      border-radius: 99px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #81C784;
+      margin-bottom: 20px;
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #4CAF50;
+      box-shadow: 0 0 8px #4CAF50;
+    }
+
+    .showcase-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 44px;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #FFFFFF 0%, #CBD5E1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .showcase-desc {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #94A3B8;
+      margin-bottom: 30px;
+    }
+
+    .portal-toggle {
+      display: flex;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 6px;
+      margin-bottom: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .toggle-btn {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: #94A3B8;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .toggle-btn.active {
+      background: #2E7D32;
+      color: #FFFFFF;
+      box-shadow: 0 4px 12px rgba(46, 125, 50, 0.4);
+    }
+
+    .actions-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .cta-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 15px 24px;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      cursor: pointer;
+    }
+
+    .cta-btn:active {
+      transform: scale(0.98);
+    }
+
+    .cta-feedback {
+      background: linear-gradient(135deg, #2E7D32, #1B5E20);
+      color: #FFFFFF;
+      box-shadow: 0 8px 24px rgba(46, 125, 50, 0.35);
+    }
+
+    .cta-feedback:hover {
+      box-shadow: 0 12px 28px rgba(46, 125, 50, 0.5);
+    }
+
+    .cta-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: #FFFFFF;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .instructions-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 18px;
+      margin-top: 24px;
+    }
+
+    .instructions-card h4 {
+      font-size: 14px;
+      color: #E2E8F0;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .instructions-card ol {
+      padding-left: 20px;
+      font-size: 13px;
+      color: #94A3B8;
+      line-height: 1.6;
+    }
+
+    /* Device Mockup Frame */
+    .device-container {
+      width: 390px;
+      height: 780px;
+      background: #000000;
+      border-radius: 54px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 0 10px #1E293B, 0 0 0 12px #334155;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Dynamic Island */
+    .dynamic-island {
+      position: absolute;
+      top: 11px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 32px;
+      background: #000000;
+      border-radius: 20px;
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+    }
+
+    .camera-lens {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: #0D1B2A;
+      box-shadow: inset 0 0 3px #1E3A8A;
+    }
+
+    .sensor {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #111827;
+    }
+
+    /* Phone Screen Contents */
+    .screen-content {
+      flex: 1;
+      background: var(--background);
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-top: 50px;
+      padding-bottom: 80px;
+      position: relative;
+    }
+
+    /* Top App Bar */
+    .app-header {
+      padding: 12px 18px 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .app-brand {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--slate-900);
+    }
+
+    .avatar-badge {
+      width: 40px;
+      height: 40px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #4CAF50, #2E7D32);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+      font-weight: 800;
+      font-size: 15px;
+      box-shadow: 0 4px 10px rgba(46, 125, 50, 0.3);
+    }
+
+    /* Hero Cards inside Phone */
+    .screen-hero {
+      margin: 12px 18px;
+      padding: 20px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #1E3A2F, #0D2818);
+      color: #FFFFFF;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .hero-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 800;
+      color: #A5D6A7;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      background: rgba(255, 255, 255, 0.12);
+      padding: 4px 8px;
+      border-radius: 20px;
+      margin-bottom: 8px;
+    }
+
+    .screen-hero h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      line-height: 1.25;
+      margin-bottom: 6px;
+    }
+
+    .screen-hero p {
+      font-size: 12px;
+      color: #E2E8F0;
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+
+    .hero-action-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, #4CAF50, #2E7D32);
+      color: #FFFFFF;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 8px 14px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* Domain Pills */
+    .domain-scroll {
+      display: flex;
+      gap: 8px;
+      padding: 8px 18px 14px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .domain-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .domain-chip {
+      background: #FFFFFF;
+      border: 1px solid var(--slate-200);
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--slate-700);
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .domain-chip.active {
+      background: var(--primary);
+      color: #FFFFFF;
+      border-color: var(--primary);
+    }
+
+    /* Cards Inside Screen */
+    .card-list {
+      padding: 0 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .internship-card {
+      background: #FFFFFF;
+      border-radius: 16px;
+      padding: 16px;
+      border: 1px solid var(--slate-200);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+
+    .internship-card:active {
+      transform: scale(0.98);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--slate-900);
+    }
+
+    .card-company {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--primary);
+      margin-top: 2px;
+    }
+
+    .status-pill {
+      font-size: 10px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      background: #E8F5E9;
+      color: #2E7D32;
+    }
+
+    .tags-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .tag-item {
+      font-size: 11px;
+      background: var(--slate-100);
+      color: var(--slate-700);
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 10px;
+      border-top: 1px solid var(--slate-100);
+    }
+
+    .stipend-amount {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .apply-btn {
+      background: var(--primary);
+      color: #FFFFFF;
+      border: none;
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* Employer KPI Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 0 18px 14px;
+    }
+
+    .kpi-box {
+      background: #FFFFFF;
+      border: 1px solid var(--slate-200);
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .kpi-num {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--slate-900);
+    }
+
+    .kpi-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--slate-700);
+      margin-top: 2px;
+    }
+
+    .kpi-sub {
+      font-size: 10px;
+      color: var(--slate-500);
+    }
+
+    /* Docked Bottom Bar */
+    .docked-nav {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 70px;
+      background: #FFFFFF;
+      border-top: 1px solid var(--slate-200);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding-bottom: 10px;
+      z-index: 998;
+    }
+
+    .nav-tab {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: var(--slate-500);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .nav-tab.active {
+      color: var(--primary);
+      font-weight: 800;
+    }
+
+    .nav-icon {
+      font-size: 20px;
+    }
+
+    /* iPhone Add-to-Home-Screen floating prompt */
+    .ios-pwa-banner {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 18px;
+      padding: 14px 18px;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      z-index: 9999;
+      animation: slideUp 0.4s ease;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .ios-pwa-text {
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .ios-pwa-text strong {
+      color: #81C784;
+    }
+
+    .ios-pwa-close {
+      background: none;
+      border: none;
+      color: #94A3B8;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    /* Modal Sheet for interactive demo */
+    .modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: none;
+      align-items: flex-end;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal-sheet {
+      width: 100%;
+      background: #FFFFFF;
+      border-top-left-radius: 24px;
+      border-top-right-radius: 24px;
+      padding: 24px 20px;
+      animation: sheetUp 0.25s ease;
+    }
+
+    @keyframes sheetUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    /* Standalone PWA adjustments for full screen on phone */
+    @media (display-mode: standalone), (max-width: 768px) {
+      body {
+        background: var(--background);
+        padding: 0;
+      }
+      .showcase-container {
+        padding: 0;
+        margin: 0;
+      }
+      .showcase-info {
+        display: none;
+      }
+      .device-container {
+        width: 100vw;
+        height: 100vh;
+        border-radius: 0;
+        box-shadow: none;
+      }
+      .dynamic-island {
+        display: none;
+      }
+      .screen-content {
+        padding-top: env(safe-area-inset-top, 20px);
+        padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 70px);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="showcase-container">
+    
+    <!-- Left Column: IA Concepts & Quick Actions -->
+    <div class="showcase-info">
+      <div class="badge-pill">
+        <div class="badge-dot"></div>
+        INTERLINK LIVE SIMULATION
+      </div>
+      
+      <h1 class="showcase-title">InternLink Experience</h1>
+      <p class="showcase-desc">
+        A full-stack internship ecosystem connecting students with verified employers. Built with React Native, Expo, and Google Firebase Realtime Database.
+      </p>
+
+      <!-- Portal Mode Toggle -->
+      <div class="portal-toggle">
+        <button class="toggle-btn active" id="btnStudent" onclick="switchPortal('student')">
+          🎓 Student Portal
+        </button>
+        <button class="toggle-btn" id="btnEmployer" onclick="switchPortal('employer')">
+          🏢 Employer Portal
+        </button>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="actions-grid">
+        <a href="https://forms.gle/2DrixK9M2mWgT9CQA" target="_blank" class="cta-btn cta-feedback">
+          <span>💬 Give Feedback / Suggestions</span>
+          <span>→</span>
+        </a>
+
+        <a href="https://github.com/Kush-Bhattacharya/internlink-app/releases" target="_blank" class="cta-btn cta-secondary">
+          <span>🤖 Download Android APK (Standalone)</span>
+          <span>↓</span>
+        </a>
+      </div>
+
+      <!-- Samsung-Style iPhone Simulation Instructions -->
+      <div class="instructions-card">
+        <h4>📲 Run as an App on your iPhone (Like Samsung iTest)</h4>
+        <ol>
+          <li>Open this link on your iPhone's <strong>Safari</strong> browser.</li>
+          <li>Tap the <strong>Share</strong> icon (square with upward arrow) at the bottom.</li>
+          <li>Scroll down and tap <strong>"Add to Home Screen"</strong>.</li>
+          <li>Tap <strong>Add</strong> — InternLink will appear as a standalone app on your home screen!</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- Right Column: Interactive Smartphone Device Mockup -->
+    <div class="device-container">
+      <div class="dynamic-island">
+        <div class="sensor"></div>
+        <div class="camera-lens"></div>
+      </div>
+
+      <div class="screen-content" id="screenBody">
+        <!-- Rendered dynamically via JavaScript -->
+      </div>
+
+      <!-- Navigation Bar -->
+      <div class="docked-nav" id="dockedNav">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Interactive Modal Sheet -->
+      <div class="modal-overlay" id="appModal" onclick="closeModal(event)">
+        <div class="modal-sheet" id="modalSheetContent">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- iOS Add to Home Screen Banner -->
+  <div class="ios-pwa-banner" id="iosPwaBanner" style="display: none;">
+    <div class="ios-pwa-text">
+      📱 <strong>Add to iPhone Home Screen:</strong> Tap <strong>Share ⎋</strong> and select <strong>"Add to Home Screen"</strong> for full-screen native simulation!
+    </div>
+    <button class="ios-pwa-close" onclick="document.getElementById('iosPwaBanner').style.display='none'">✕</button>
+  </div>
+
+  <script>
+    let currentPortal = 'student';
+    let currentTab = 'home';
+    let activeFilter = 'All';
+
+    const SAMPLE_INTERNSHIPS = [
+      {
+        id: 'job-1',
+        title: 'Software Engineer Intern',
+        company: 'Stripe Innovation Labs',
+        domain: 'Technology',
+        location: 'Remote',
+        duration: '3 Months',
+        stipend: '₹25,000 / mo',
+        tags: ['React Native', 'Firebase', 'TypeScript'],
+        description: 'Build responsive mobile microservices, real-time push engines, and robust candidate workflows.'
+      },
+      {
+        id: 'job-2',
+        title: 'UI/UX Product Designer',
+        company: 'Fintech Nexus',
+        domain: 'Design',
+        location: 'Bengaluru / Hybrid',
+        duration: '6 Months',
+        stipend: '₹20,000 / mo',
+        tags: ['Figma', 'Design Systems', 'Prototyping'],
+        description: 'Design intuitive student application journeys, accessibility compliance palettes, and executive talent dashboards.'
+      },
+      {
+        id: 'job-3',
+        title: 'Data Science & AI Intern',
+        company: 'Neural Dynamics',
+        domain: 'Technology',
+        location: 'Remote',
+        duration: '2 Months',
+        stipend: '₹35,000 / mo',
+        tags: ['Python', 'PyTorch', 'Data Analysis'],
+        description: 'Train recommendation models to match high school candidates with ideal internship listings.'
+      },
+      {
+        id: 'job-4',
+        title: 'Growth Marketing Associate',
+        company: 'EdVantage Global',
+        domain: 'Marketing',
+        location: 'Mumbai / Remote',
+        duration: '3 Months',
+        stipend: '₹15,000 / mo',
+        tags: ['Content Strategy', 'SEO', 'Analytics'],
+        description: 'Scale university student outreach programs across top engineering and design colleges.'
+      }
+    ];
+
+    function renderScreen() {
+      const body = document.getElementById('screenBody');
+      const nav = document.getElementById('dockedNav');
+
+      if (currentPortal === 'student') {
+        renderStudentPortal(body, nav);
+      } else {
+        renderEmployerPortal(body, nav);
+      }
+    }
+
+    function renderStudentPortal(body, nav) {
+      if (currentTab === 'home' || currentTab === 'jobs') {
+        let filtered = activeFilter === 'All' 
+          ? SAMPLE_INTERNSHIPS 
+          : SAMPLE_INTERNSHIPS.filter(j => j.domain === activeFilter);
+
+        body.innerHTML = `
+          <div class="app-header">
+            <div>
+              <p style="font-size: 12px; color: #64748B; font-weight: 600;">Good morning,</p>
+              <h2 class="app-brand">InternLink</h2>
+            </div>
+            <div class="avatar-badge">JD</div>
+          </div>
+
+          <div class="screen-hero">
+            <span class="hero-badge">Curated For You</span>
+            <h3>Launch Your Career Today</h3>
+            <p>Explore verified opportunities tailored to your academic interests and technical skills.</p>
+            <button class="hero-action-btn" onclick="openFeedback()">
+              <span>💬 Suggest a Feature</span>
+            </button>
+          </div>
+
+          <div class="domain-scroll">
+            ${['All', 'Technology', 'Design', 'Marketing'].map(d => `
+              <div class="domain-chip ${activeFilter === d ? 'active' : ''}" onclick="setFilter('${d}')">
+                ${d}
+              </div>
+            `).join('')}
+          </div>
+
+          <div class="card-list">
+            ${filtered.map(job => `
+              <div class="internship-card" onclick="openJobDetails('${job.id}')">
+                <div class="card-top">
+                  <div>
+                    <h4 class="card-title">${job.title}</h4>
+                    <p class="card-company">${job.company}</p>
+                  </div>
+                  <span class="status-pill">${job.location}</span>
+                </div>
+                <div class="tags-row">
+                  ${job.tags.map(t => `<span class="tag-item">${t}</span>`).join('')}
+                </div>
+                <div class="card-footer">
+                  <span class="stipend-amount">${job.stipend}</span>
+                  <button class="apply-btn" onclick="event.stopPropagation(); openJobDetails('${job.id}')">Apply</button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+
+        nav.innerHTML = `
+          <div class="nav-tab ${currentTab === 'home' ? 'active' : ''}" onclick="setTab('home')">
+            <span class="nav-icon">🏠</span>
+            <span>Home</span>
+          </div>
+          <div class="nav-tab ${currentTab === 'jobs' ? 'active' : ''}" onclick="setTab('jobs')">
+            <span class="nav-icon">💼</span>
+            <span>Browse</span>
+          </div>
+          <div class="nav-tab" onclick="openFeedback()">
+            <span class="nav-icon">💬</span>
+            <span>Feedback</span>
+          </div>
+          <div class="nav-tab ${currentTab === 'profile' ? 'active' : ''}" onclick="setTab('profile')">
+            <span class="nav-icon">👤</span>
+            <span>Profile</span>
+          </div>
+        `;
+      } else if (currentTab === 'profile') {
+        body.innerHTML = `
+          <div class="app-header">
+            <h2 class="app-brand">My Profile</h2>
+            <div class="avatar-badge">JD</div>
+          </div>
+
+          <div style="padding: 16px 18px;">
+            <div style="background: #FFFFFF; border-radius: 18px; padding: 18px; border: 1px solid var(--slate-200); text-align: center; margin-bottom: 14px;">
+              <div class="avatar-badge" style="width: 60px; height: 60px; margin: 0 auto 10px; font-size: 22px;">JD</div>
+              <h3 style="font-size: 18px; font-weight: 800; color: #0F172A;">Jane Doe</h3>
+              <p style="font-size: 13px; color: #64748B;">Stanford University • Class of 2025</p>
+              <div style="margin-top: 14px; background: #F8FAFC; border-radius: 10px; padding: 10px;">
+                <p style="font-size: 12px; font-weight: 700; color: #2E7D32;">Profile Completeness: 90%</p>
+              </div>
+            </div>
+
+            <div style="background: #FFFFFF; border-radius: 18px; padding: 18px; border: 1px solid var(--slate-200); margin-bottom: 14px;">
+              <h4 style="font-size: 14px; font-weight: 700; margin-bottom: 10px;">Technical Proficiencies</h4>
+              <div class="tags-row">
+                <span class="tag-item" style="background: #E8F5E9; color: #2E7D32;">Python</span>
+                <span class="tag-item" style="background: #E8F5E9; color: #2E7D32;">React Native</span>
+                <span class="tag-item" style="background: #E8F5E9; color: #2E7D32;">Figma</span>
+                <span class="tag-item" style="background: #E8F5E9; color: #2E7D32;">SQL</span>
+                <span class="tag-item" style="background: #E8F5E9; color: #2E7D32;">Git</span>
+              </div>
+            </div>
+
+            <a href="https://forms.gle/2DrixK9M2mWgT9CQA" target="_blank" style="display: block; text-align: center; background: #2E7D32; color: #FFFFFF; padding: 12px; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 13px;">
+              Submit App Feedback
+            </a>
+          </div>
+        `;
+      }
+    }
+
+    function renderEmployerPortal(body, nav) {
+      body.innerHTML = `
+        <div class="app-header">
+          <div>
+            <p style="font-size: 12px; color: #64748B; font-weight: 600;">Employer Dashboard</p>
+            <h2 class="app-brand">Acme Corp Labs</h2>
+          </div>
+          <div class="avatar-badge" style="background: linear-gradient(135deg, #1D4ED8, #1E40AF);">AC</div>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi-box">
+            <p class="kpi-num" style="color: #2E7D32;">4</p>
+            <p class="kpi-label">Active Roles</p>
+            <p class="kpi-sub">Published listings</p>
+          </div>
+          <div class="kpi-box">
+            <p class="kpi-num" style="color: #1D4ED8;">28</p>
+            <p class="kpi-label">Candidates</p>
+            <p class="kpi-sub">Total applicants</p>
+          </div>
+          <div class="kpi-box">
+            <p class="kpi-num" style="color: #EA580C;">9</p>
+            <p class="kpi-label">Under Review</p>
+            <p class="kpi-sub">Awaiting decision</p>
+          </div>
+          <div class="kpi-box">
+            <p class="kpi-num" style="color: #7E22CE;">5</p>
+            <p class="kpi-label">Hired / Selected</p>
+            <p class="kpi-sub">Offers extended</p>
+          </div>
+        </div>
+
+        <div style="padding: 0 18px 14px;">
+          <h4 style="font-size: 15px; font-weight: 800; margin-bottom: 10px; color: #0F172A;">Recent Candidate Dossiers</h4>
+          <div class="card-list">
+            <div class="internship-card" onclick="openCandidateModal('Alex Smith', 'Software Engineering Intern', 'Harvard University')">
+              <div class="card-top">
+                <div>
+                  <h4 class="card-title">Alex Smith</h4>
+                  <p class="card-company">Applied for: Software Engineer Intern</p>
+                </div>
+                <span class="status-pill" style="background: #FFF7ED; color: #C2410C;">Under Review</span>
+              </div>
+              <p style="font-size: 12px; color: #64748B;">Harvard University • Python, React Native, SQL</p>
+            </div>
+
+            <div class="internship-card" onclick="openCandidateModal('Sarah Lin', 'UI/UX Product Designer', 'MIT')">
+              <div class="card-top">
+                <div>
+                  <h4 class="card-title">Sarah Lin</h4>
+                  <p class="card-company">Applied for: Product Designer</p>
+                </div>
+                <span class="status-pill" style="background: #F3E8FF; color: #7E22CE;">Shortlisted</span>
+              </div>
+              <p style="font-size: 12px; color: #64748B;">MIT • Figma, Design Systems, Mobile UI</p>
+            </div>
+          </div>
+        </div>
+      `;
+
+      nav.innerHTML = `
+        <div class="nav-tab active">
+          <span class="nav-icon">📊</span>
+          <span>Dashboard</span>
+        </div>
+        <div class="nav-tab" onclick="alert('In this interactive simulation, you can click on any candidate to review their dossier and make decisions.')">
+          <span class="nav-icon">📋</span>
+          <span>Postings</span>
+        </div>
+        <div class="nav-tab" onclick="openFeedback()">
+          <span class="nav-icon">💬</span>
+          <span>Feedback</span>
+        </div>
+      `;
+    }
+
+    function switchPortal(portal) {
+      currentPortal = portal;
+      currentTab = 'home';
+      document.getElementById('btnStudent').classList.toggle('active', portal === 'student');
+      document.getElementById('btnEmployer').classList.toggle('active', portal === 'employer');
+      renderScreen();
+    }
+
+    function setTab(tab) {
+      currentTab = tab;
+      renderScreen();
+    }
+
+    function setFilter(filter) {
+      activeFilter = filter;
+      renderScreen();
+    }
+
+    function openJobDetails(jobId) {
+      const job = SAMPLE_INTERNSHIPS.find(j => j.id === jobId);
+      if (!job) return;
+
+      const modal = document.getElementById('appModal');
+      const content = document.getElementById('modalSheetContent');
+
+      content.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <div>
+            <h3 style="font-size: 18px; font-weight: 800; color: #0F172A;">${job.title}</h3>
+            <p style="font-size: 13px; color: #2E7D32; font-weight: 600;">${job.company}</p>
+          </div>
+          <span style="font-size: 14px; font-weight: 800; color: #2E7D32;">${job.stipend}</span>
+        </div>
+        <p style="font-size: 13px; color: #475569; line-height: 1.5; margin-bottom: 14px;">${job.description}</p>
+        <div class="tags-row" style="margin-bottom: 20px;">
+          ${job.tags.map(t => `<span class="tag-item">${t}</span>`).join('')}
+        </div>
+        <button class="cta-btn cta-feedback" style="width: 100%; border: none;" onclick="submitApplication()">
+          🚀 Submit One-Tap Application
+        </button>
+      `;
+
+      modal.classList.add('open');
+    }
+
+    function openCandidateModal(name, role, school) {
+      const modal = document.getElementById('appModal');
+      const content = document.getElementById('modalSheetContent');
+
+      content.innerHTML = `
+        <h3 style="font-size: 18px; font-weight: 800; color: #0F172A; margin-bottom: 4px;">Candidate Dossier: ${name}</h3>
+        <p style="font-size: 13px; color: #64748B; margin-bottom: 12px;">${role} • ${school}</p>
+        <p style="font-size: 13px; color: #334155; line-height: 1.5; margin-bottom: 16px;">
+          High-potential applicant with strong foundations in software design and peer mentorship.
+        </p>
+        <div style="display: flex; gap: 8px;">
+          <button style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #7E22CE; background: #FAF5FF; color: #7E22CE; font-weight: 700;" onclick="candidateDecision('Shortlisted')">Shortlist</button>
+          <button style="flex: 1; padding: 10px; border-radius: 8px; border: none; background: #2E7D32; color: #FFFFFF; font-weight: 700;" onclick="candidateDecision('Accepted')">Accept</button>
+          <button style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #DC2626; background: #FEF2F2; color: #DC2626; font-weight: 700;" onclick="candidateDecision('Rejected')">Reject</button>
+        </div>
+      `;
+
+      modal.classList.add('open');
+    }
+
+    function candidateDecision(status) {
+      confetti({ particleCount: 70, spread: 60, origin: { y: 0.7 } });
+      alert('Decision updated: Candidate ' + status + '!');
+      document.getElementById('appModal').classList.remove('open');
+    }
+
+    function submitApplication() {
+      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+      const content = document.getElementById('modalSheetContent');
+      content.innerHTML = `
+        <div style="text-align: center; padding: 20px 0;">
+          <h3 style="font-size: 20px; font-weight: 800; color: #2E7D32; margin-bottom: 8px;">Application Submitted!</h3>
+          <p style="font-size: 13px; color: #64748B; margin-bottom: 16px;">The employer has received your resume and portfolio.</p>
+          <button class="cta-btn cta-feedback" style="margin: 0 auto; border: none;" onclick="openFeedback()">
+            Give Us Feedback On This Flow
+          </button>
+        </div>
+      `;
+    }
+
+    function closeModal(e) {
+      if (e.target.id === 'appModal') {
+        document.getElementById('appModal').classList.remove('open');
+      }
+    }
+
+    function openFeedback() {
+      window.open('https://forms.gle/2DrixK9M2mWgT9CQA', '_blank');
+    }
+
+    // Detect iPhone / Safari to prompt "Add to Home Screen"
+    const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+
+    if (isIos && !isStandalone) {
+      document.getElementById('iosPwaBanner').style.display = 'flex';
+    }
+
+    renderScreen();
+  </script>
+</body>
+</html>
