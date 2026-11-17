@@ -13,8 +13,8 @@
 
 You can test the application using two methods without needing developer tools:
 
-### Method 1: iPhone Simulation (Samsung "Try Galaxy" Style)
-Just like Samsung's "Try Galaxy on iPhone" experience, you can run a full-screen, native-feeling simulation of InternLink directly on your iPhone without going through the App Store:
+### Method 1: iPhone Simulation
+you can run a full-screen, native-feeling simulation of InternLink directly on your iPhone without going through the App Store:
 
 1. Open **[https://kush-bhattacharya.github.io/internlink-app/](https://kush-bhattacharya.github.io/internlink-app/)** in **Safari** on your iPhone.
 2. Tap the **Share** button (`⎋` square with upward arrow) at the bottom of Safari.
