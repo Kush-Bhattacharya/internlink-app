@@ -12,7 +12,7 @@
   <meta name="apple-mobile-web-app-title" content="InternLink">
   <link rel="apple-touch-icon" href="assets/icon.png">
   <link rel="icon" type="image/png" href="assets/icon.png">
-  <meta name="theme-color" content="#2E7D32">
+  <meta name="theme-color" content="#FFFFFF">
 
   <!-- Fonts & Confetti -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -111,9 +111,7 @@
       font-weight: 800;
       line-height: 1.15;
       margin-bottom: 16px;
-      background: linear-gradient(135deg, #FFFFFF 0%, #CBD5E1 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: #FFFFFF;
     }
 
     .showcase-desc {
@@ -189,7 +187,7 @@
     }
 
     .cta-feedback {
-      background: linear-gradient(135deg, #2E7D32, #1B5E20);
+      background: #2E7D32;
       color: #FFFFFF;
       box-shadow: 0 6px 20px rgba(46, 125, 50, 0.35);
     }
@@ -282,7 +280,7 @@
 
     /* Top App Header with Safe-Area Protection */
     .app-header {
-      padding-top: calc(env(safe-area-inset-top, 24px) + 20px);
+      padding-top: calc(env(safe-area-inset-top, 24px) + 24px);
       padding-bottom: 14px;
       padding-left: 18px;
       padding-right: 18px;
@@ -295,7 +293,21 @@
       top: 0;
       z-index: 40;
       flex-shrink: 0;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+      box-shadow: none;
+      filter: none;
+      -webkit-filter: none;
+    }
+
+    /* Solid Status Bar Cover to block any iOS Safari ambient gradient or blur */
+    .ios-status-bar-cover {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: env(safe-area-inset-top, 0px);
+      background: #FFFFFF;
+      z-index: 999;
+      pointer-events: none;
     }
 
     .header-info-group {
@@ -329,7 +341,7 @@
       width: 36px;
       height: 36px;
       border-radius: 18px;
-      background: linear-gradient(135deg, #4CAF50, #2E7D32);
+      background: #2E7D32;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -807,7 +819,8 @@
       margin: 16px;
       padding: 18px;
       border-radius: 16px;
-      background: linear-gradient(135deg, #1E3A2F, #0D2818);
+      background: #163828;
+      border: 1px solid #234E38;
       color: #FFFFFF;
       flex-shrink: 0;
     }
@@ -1150,6 +1163,7 @@
   </style>
 </head>
 <body>
+  <div class="ios-status-bar-cover"></div>
 
   <div class="showcase-container">
     
@@ -2369,7 +2383,7 @@
           </div>
           <div class="header-user-actions">
             <button class="signout-header-btn" onclick="signOutUser()">Sign Out</button>
-            <div class="avatar-badge" style="background: linear-gradient(135deg, #1D4ED8, #1E40AF);">
+            <div class="avatar-badge" style="background: #1D4ED8;">
               ${currentUser.companyName?.[0] || 'C'}
             </div>
           </div>
@@ -2586,7 +2600,7 @@
           ${headerHtml}
           <div style="padding: 16px 16px calc(90px + env(safe-area-inset-bottom, 20px)); overflow-y: auto;">
             <div style="background: #FFFFFF; border-radius: 18px; padding: 20px; border: 1px solid var(--slate-200); text-align: center; margin-bottom: 14px;">
-              <div class="avatar-badge" style="width: 60px; height: 60px; margin: 0 auto 10px; font-size: 22px; background: linear-gradient(135deg, #1D4ED8, #1E40AF);">
+              <div class="avatar-badge" style="width: 60px; height: 60px; margin: 0 auto 10px; font-size: 22px; background: #1D4ED8;">
                 ${currentUser.companyName?.[0] || 'C'}
               </div>
               <h3 style="font-size: 18px; font-weight: 800; color: var(--slate-900);">${currentUser.companyName}</h3>
