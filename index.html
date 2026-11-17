@@ -8,7 +8,7 @@
   <!-- PWA & Apple Mobile Web App Configuration -->
   <link rel="manifest" href="manifest.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="InternLink">
   <link rel="apple-touch-icon" href="assets/icon.png">
   <link rel="icon" type="image/png" href="assets/icon.png">
@@ -54,14 +54,15 @@
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
-    body {
+    html, body {
+      width: 100%;
+      height: 100%;
       background: #0B132B;
       color: var(--slate-900);
-      min-height: 100vh;
+      overflow-x: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow-x: hidden;
     }
 
     /* Desktop Showcase Wrapper */
@@ -223,7 +224,7 @@
     /* Device Mockup Frame */
     .device-container {
       width: 390px;
-      height: 790px;
+      height: 800px;
       background: #000000;
       border-radius: 54px;
       box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 0 10px #1E293B, 0 0 0 12px #334155;
@@ -268,17 +269,23 @@
     /* Screen Viewport */
     .screen-content {
       flex: 1;
+      width: 100%;
+      height: 100%;
       background: var(--background);
       overflow-y: auto;
       overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
       position: relative;
       display: flex;
       flex-direction: column;
     }
 
-    /* Header Bar */
+    /* Top App Header with Safe-Area Protection */
     .app-header {
-      padding: 50px 18px 12px;
+      padding-top: calc(env(safe-area-inset-top, 24px) + 20px);
+      padding-bottom: 14px;
+      padding-left: 18px;
+      padding-right: 18px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -287,6 +294,21 @@
       position: sticky;
       top: 0;
       z-index: 40;
+      flex-shrink: 0;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+    }
+
+    .header-info-group {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .header-subgreeting {
+      font-size: 11px;
+      color: var(--slate-500);
+      font-weight: 600;
+      line-height: 1.2;
     }
 
     .app-brand-title {
@@ -294,15 +316,13 @@
       font-size: 22px;
       font-weight: 800;
       color: var(--slate-900);
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      line-height: 1.2;
     }
 
     .header-user-actions {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
 
     .avatar-badge {
@@ -323,8 +343,8 @@
     .signout-header-btn {
       background: var(--slate-100);
       border: 1px solid var(--slate-200);
-      color: var(--slate-600);
-      padding: 5px 10px;
+      color: var(--slate-700);
+      padding: 6px 12px;
       border-radius: 8px;
       font-size: 11px;
       font-weight: 700;
@@ -338,22 +358,25 @@
       border-color: #FCA5A5;
     }
 
-    /* Docked Navigation Bar */
+    /* Fixed Docked Navigation Bar with Home Indicator Safe Area */
     .docked-nav {
       position: absolute;
       bottom: 0;
       left: 0;
       right: 0;
-      height: 70px;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      height: calc(60px + env(safe-area-inset-bottom, 16px));
+      padding-bottom: max(14px, env(safe-area-inset-bottom, 14px));
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border-top: 1px solid var(--slate-200);
       display: flex;
       align-items: center;
       justify-content: space-around;
-      padding: 0 10px 10px;
+      padding-left: 10px;
+      padding-right: 10px;
       z-index: 50;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.03);
     }
 
     .nav-tab {
@@ -366,7 +389,7 @@
       font-size: 10px;
       font-weight: 700;
       cursor: pointer;
-      padding: 6px 12px;
+      padding: 6px 10px;
       border-radius: 10px;
       transition: color 0.15s ease;
     }
@@ -389,13 +412,160 @@
       border-radius: 20px;
     }
 
+    /* ==========================================
+       HOME SCREEN GATE SCREEN (SAFARI / BROWSER)
+       ========================================== */
+    .gate-screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #FFFFFF;
+      z-index: 500;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: calc(env(safe-area-inset-top, 24px) + 30px) 24px calc(env(safe-area-inset-bottom, 20px) + 20px);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .gate-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .gate-app-icon {
+      width: 76px;
+      height: 76px;
+      border-radius: 18px;
+      box-shadow: 0 10px 25px rgba(46, 125, 50, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.05);
+      margin-bottom: 14px;
+    }
+
+    .gate-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--slate-900);
+      margin-bottom: 6px;
+    }
+
+    .gate-subtitle {
+      font-size: 13px;
+      color: var(--slate-600);
+      line-height: 1.5;
+    }
+
+    .gate-steps-card {
+      background: var(--slate-100);
+      border: 1px solid var(--slate-200);
+      border-radius: 18px;
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .gate-step-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .gate-step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 14px;
+      background: var(--primary);
+      color: #FFFFFF;
+      font-size: 13px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .gate-step-content h5 {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--slate-900);
+      margin-bottom: 2px;
+    }
+
+    .gate-step-content p {
+      font-size: 12px;
+      color: var(--slate-600);
+      line-height: 1.4;
+    }
+
+    .gate-share-icon-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #FFFFFF;
+      border: 1px solid var(--slate-300);
+      border-radius: 6px;
+      padding: 2px 6px;
+      vertical-align: middle;
+      color: var(--blue);
+    }
+
+    .gate-pointer-box {
+      text-align: center;
+      padding: 14px 10px;
+      background: rgba(46, 125, 50, 0.08);
+      border: 1px dashed rgba(46, 125, 50, 0.4);
+      border-radius: 14px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .bouncing-arrow {
+      font-size: 18px;
+      color: var(--primary);
+      animation: bounce 1.2s infinite ease-in-out;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
+    }
+
+    .gate-pointer-text {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    .gate-bypass-link {
+      background: transparent;
+      border: none;
+      color: var(--slate-500);
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: underline;
+      cursor: pointer;
+      padding: 6px;
+      text-align: center;
+      width: 100%;
+    }
+
     /* Auth Screen Styles */
     .auth-container {
-      padding: 60px 24px 30px;
+      padding: calc(env(safe-area-inset-top, 24px) + 24px) 24px calc(env(safe-area-inset-bottom, 20px) + 30px);
       display: flex;
       flex-direction: column;
       flex: 1;
       background: #FFFFFF;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .auth-hero {
@@ -430,6 +600,7 @@
       border-radius: 12px;
       padding: 4px;
       margin-bottom: 20px;
+      flex-shrink: 0;
     }
 
     .auth-tab-btn {
@@ -542,6 +713,7 @@
       margin-bottom: 16px;
       padding-bottom: 10px;
       border-bottom: 1px solid var(--slate-200);
+      flex-shrink: 0;
     }
 
     .stepper-title {
@@ -596,6 +768,7 @@
       padding-top: 18px;
       border-top: 1px dashed var(--slate-300);
       text-align: center;
+      flex-shrink: 0;
     }
 
     .demo-login-box p {
@@ -631,13 +804,14 @@
       color: var(--primary);
     }
 
-    /* Student & Employer Views */
+    /* Hero Banner */
     .screen-hero {
-      margin: 14px 16px;
+      margin: 16px;
       padding: 18px;
       border-radius: 16px;
       background: linear-gradient(135deg, #1E3A2F, #0D2818);
       color: #FFFFFF;
+      flex-shrink: 0;
     }
 
     .hero-badge {
@@ -681,6 +855,7 @@
       grid-template-columns: 1fr 1fr;
       gap: 10px;
       padding: 0 16px 14px;
+      flex-shrink: 0;
     }
 
     .kpi-box {
@@ -709,9 +884,10 @@
       color: var(--slate-500);
     }
 
-    /* Filter & Search Elements */
+    /* Search & Filter Bar Elements (Non-Shrinking) */
     .search-bar-wrap {
       padding: 12px 16px 8px;
+      flex-shrink: 0;
     }
 
     .search-input {
@@ -732,8 +908,12 @@
       display: flex;
       gap: 8px;
       overflow-x: auto;
-      padding: 6px 16px 12px;
+      padding: 8px 16px 12px;
+      margin-bottom: 8px;
       scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      flex-shrink: 0;
+      min-height: 52px;
     }
 
     .domain-scroll::-webkit-scrollbar {
@@ -741,8 +921,9 @@
     }
 
     .domain-chip {
+      flex-shrink: 0;
       white-space: nowrap;
-      padding: 6px 14px;
+      padding: 8px 16px;
       background: #FFFFFF;
       border: 1px solid var(--slate-200);
       border-radius: 99px;
@@ -751,6 +932,10 @@
       color: var(--slate-700);
       cursor: pointer;
       transition: all 0.15s ease;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .domain-chip.active {
@@ -759,12 +944,12 @@
       border-color: var(--primary);
     }
 
-    /* Card List */
+    /* Card List with Generous Safe Bottom Padding */
     .card-list {
-      padding: 0 16px 80px;
+      padding: 0 16px calc(90px + env(safe-area-inset-bottom, 20px));
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 14px;
     }
 
     .internship-card {
@@ -805,7 +990,7 @@
     .status-pill {
       font-size: 10px;
       font-weight: 700;
-      padding: 3px 8px;
+      padding: 4px 8px;
       border-radius: 6px;
       background: var(--slate-100);
       color: var(--slate-600);
@@ -827,7 +1012,7 @@
 
     .tag-item {
       font-size: 11px;
-      padding: 3px 8px;
+      padding: 4px 8px;
       background: var(--slate-100);
       border-radius: 6px;
       color: var(--slate-700);
@@ -863,7 +1048,7 @@
       background: var(--primary);
       color: #FFFFFF;
       border: none;
-      padding: 7px 16px;
+      padding: 8px 16px;
       border-radius: 8px;
       font-size: 12px;
       font-weight: 700;
@@ -904,7 +1089,7 @@
       max-height: 85%;
       background: #FFFFFF;
       border-radius: 24px 24px 0 0;
-      padding: 24px 20px 30px;
+      padding: 24px 20px max(30px, calc(env(safe-area-inset-bottom, 20px) + 20px));
       overflow-y: auto;
       box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.2);
       animation: slideUp 0.25s ease-out;
@@ -918,9 +1103,9 @@
     /* Toast Notification */
     .toast-box {
       position: absolute;
-      top: 60px;
-      left: 20px;
-      right: 20px;
+      top: calc(env(safe-area-inset-top, 24px) + 16px);
+      left: 16px;
+      right: 16px;
       background: var(--slate-900);
       color: #FFFFFF;
       padding: 12px 16px;
@@ -940,39 +1125,7 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* iOS PWA Banner */
-    .ios-pwa-banner {
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
-      right: 20px;
-      background: #FFFFFF;
-      border: 1px solid var(--slate-300);
-      border-radius: 14px;
-      padding: 12px 16px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-      z-index: 9999;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .ios-pwa-text {
-      font-size: 12px;
-      color: var(--slate-800);
-      line-height: 1.4;
-    }
-
-    .ios-pwa-close {
-      background: none;
-      border: none;
-      font-size: 16px;
-      color: var(--slate-500);
-      cursor: pointer;
-    }
-
-    /* Standalone / Mobile Full Viewport */
+    /* Standalone & Mobile Full Viewport Optimization */
     @media (display-mode: standalone), (max-width: 820px) {
       body {
         background: var(--background);
@@ -982,6 +1135,7 @@
         padding: 0;
         margin: 0;
         max-width: 100vw;
+        height: 100vh;
       }
       .showcase-info {
         display: none;
@@ -994,13 +1148,6 @@
       }
       .dynamic-island {
         display: none;
-      }
-      .app-header {
-        padding-top: max(16px, env(safe-area-inset-top));
-      }
-      .docked-nav {
-        padding-bottom: max(10px, env(safe-area-inset-bottom));
-        height: calc(65px + env(safe-area-inset-bottom, 0px));
       }
     }
   </style>
@@ -1095,14 +1242,6 @@
 
   </div>
 
-  <!-- iOS Add to Home Screen Banner -->
-  <div class="ios-pwa-banner" id="iosPwaBanner" style="display: none;">
-    <div class="ios-pwa-text">
-      <strong>Add to iPhone Home Screen:</strong> Tap <strong>Share</strong> and select <strong>"Add to Home Screen"</strong> for full-screen standalone execution.
-    </div>
-    <button class="ios-pwa-close" onclick="document.getElementById('iosPwaBanner').style.display='none'">✕</button>
-  </div>
-
   <script>
     // ==========================================
     // DATA PERSISTENCE & LOCAL STORAGE LAYER
@@ -1111,7 +1250,8 @@
       SESSION: 'internlink_session_user',
       USERS: 'internlink_registered_users',
       POSTINGS: 'internlink_job_postings',
-      APPLICATIONS: 'internlink_applications'
+      APPLICATIONS: 'internlink_applications',
+      BYPASS_GATE: 'internlink_bypass_gate'
     };
 
     // Default Seed Data
@@ -1342,19 +1482,38 @@
     }
 
     // ==========================================
+    // STANDALONE / GATE DETECTION
+    // ==========================================
+    function isRunningStandalone() {
+      // 1. iOS Safari Home Screen standalone property
+      if (window.navigator.standalone === true) return true;
+      // 2. Standard CSS display-mode media query
+      if (window.matchMedia('(display-mode: standalone)').matches) return true;
+      // 3. Query string or local storage override
+      if (window.location.search.includes('standalone=true')) return true;
+      if (localStorage.getItem(STORAGE_KEYS.BYPASS_GATE) === 'true') return true;
+      return false;
+    }
+
+    function isMobileDevice() {
+      const ua = navigator.userAgent.toLowerCase();
+      const isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+      return /iphone|ipad|ipod|android|mobile/.test(ua) || (window.innerWidth <= 820 && isTouch);
+    }
+
+    // ==========================================
     // APPLICATION STATE MANAGEMENT
     // ==========================================
     let currentUser = loadData(STORAGE_KEYS.SESSION, null);
     let currentTab = 'home';
-    let authMode = 'signin'; // 'signin' | 'signup'
-    let signupRole = 'student'; // 'student' | 'employer'
+    let authMode = 'signin';
+    let signupRole = 'student';
     let signupStep = 1;
     let postJobStep = 1;
     let activeFilter = 'All';
     let searchQuery = '';
     let workModeFilter = 'All';
 
-    // Temporary Form State during Multi-step Registration
     let regData = {
       role: 'student',
       firstName: '',
@@ -1396,9 +1555,17 @@
     // ROUTING & MAIN CONTROLLER
     // ==========================================
     function checkSessionAndRender() {
-      currentUser = loadData(STORAGE_KEYS.SESSION, null);
       const body = document.getElementById('screenBody');
       const nav = document.getElementById('dockedNav');
+
+      // Check if user should see the Gate (Mobile Browser and NOT in Standalone Mode)
+      if (isMobileDevice() && !isRunningStandalone()) {
+        nav.style.display = 'none';
+        renderGateView(body);
+        return;
+      }
+
+      currentUser = loadData(STORAGE_KEYS.SESSION, null);
 
       if (!currentUser) {
         nav.style.display = 'none';
@@ -1411,6 +1578,65 @@
           renderEmployerView(body, nav);
         }
       }
+    }
+
+    // ==========================================
+    // HOME SCREEN GATE VIEW
+    // ==========================================
+    function renderGateView(container) {
+      container.innerHTML = `
+        <div class="gate-screen">
+          <div>
+            <div class="gate-header">
+              <img src="assets/icon.png" alt="InternLink" class="gate-app-icon" onerror="this.src='https://placehold.co/76x76/2E7D32/FFFFFF?text=IL'">
+              <h2 class="gate-title">InternLink</h2>
+              <p class="gate-subtitle">Add to Home Screen to Launch Mobile Experience</p>
+            </div>
+
+            <div class="gate-steps-card">
+              <div class="gate-step-row">
+                <div class="gate-step-num">1</div>
+                <div class="gate-step-content">
+                  <h5>Tap the Share Button</h5>
+                  <p>In Safari's bottom toolbar, tap the <strong>Share</strong> button <span class="gate-share-icon-badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg></span>.</p>
+                </div>
+              </div>
+
+              <div class="gate-step-row">
+                <div class="gate-step-num">2</div>
+                <div class="gate-step-content">
+                  <h5>Select "Add to Home Screen"</h5>
+                  <p>Scroll down the share sheet options and tap <strong>"Add to Home Screen"</strong>.</p>
+                </div>
+              </div>
+
+              <div class="gate-step-row">
+                <div class="gate-step-num">3</div>
+                <div class="gate-step-content">
+                  <h5>Open from Your Home Screen</h5>
+                  <p>Tap <strong>Add</strong> in the top-right corner, then tap the new <strong>InternLink</strong> app icon on your home screen to launch in full-screen native mode.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="gate-pointer-box">
+              <span class="bouncing-arrow">↓</span>
+              <span class="gate-pointer-text">Tap the Safari Share button below</span>
+            </div>
+          </div>
+
+          <div>
+            <button class="gate-bypass-link" onclick="bypassGateAndEnter()">
+              Or preview in browser mode →
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function bypassGateAndEnter() {
+      localStorage.setItem(STORAGE_KEYS.BYPASS_GATE, 'true');
+      checkSessionAndRender();
     }
 
     // ==========================================
@@ -1678,7 +1904,6 @@
     }
 
     function goToSignupStep(step) {
-      // Save current fields before navigating
       if (signupStep === 1) {
         if (regData.role === 'student') {
           regData.firstName = document.getElementById('regFirstName')?.value.trim() || regData.firstName;
@@ -1858,11 +2083,11 @@
       const applications = loadData(STORAGE_KEYS.APPLICATIONS, SEED_APPLICATIONS);
       const myApps = applications.filter(a => a.studentId === currentUser.id);
 
-      // Top Header
+      // Top Safe-Area Protected Header
       const headerHtml = `
         <div class="app-header">
-          <div>
-            <p style="font-size: 11px; color: var(--slate-500); font-weight: 600;">Good day, ${currentUser.firstName}</p>
+          <div class="header-info-group">
+            <span class="header-subgreeting">Good day, ${currentUser.firstName}</span>
             <h2 class="app-brand-title">InternLink</h2>
           </div>
           <div class="header-user-actions">
@@ -1973,7 +2198,7 @@
 
         mainContentHtml = `
           ${headerHtml}
-          <div style="padding: 16px 16px 8px;">
+          <div style="padding: 16px 16px 8px; flex-shrink: 0;">
             <h3 style="font-size: 17px; font-weight: 800; color: var(--slate-900);">All Available Postings</h3>
             <p style="font-size: 12px; color: var(--slate-500);">Filter by work mode and requirements</p>
           </div>
@@ -2019,7 +2244,7 @@
       } else if (currentTab === 'applications') {
         mainContentHtml = `
           ${headerHtml}
-          <div style="padding: 16px 16px 12px;">
+          <div style="padding: 16px 16px 12px; flex-shrink: 0;">
             <h3 style="font-size: 18px; font-weight: 800; color: var(--slate-900);">Submitted Applications</h3>
             <p style="font-size: 12px; color: var(--slate-500);">Real-time status updates from recruiters</p>
           </div>
@@ -2053,7 +2278,7 @@
       } else if (currentTab === 'profile') {
         mainContentHtml = `
           ${headerHtml}
-          <div style="padding: 16px 16px 90px;">
+          <div style="padding: 16px 16px calc(90px + env(safe-area-inset-bottom, 20px)); overflow-y: auto;">
             <div style="background: #FFFFFF; border-radius: 18px; padding: 20px; border: 1px solid var(--slate-200); text-align: center; margin-bottom: 14px;">
               <div class="avatar-badge" style="width: 60px; height: 60px; margin: 0 auto 10px; font-size: 20px;">
                 ${(currentUser.firstName?.[0] || 'S') + (currentUser.lastName?.[0] || 'T')}
@@ -2100,7 +2325,6 @@
 
       body.innerHTML = mainContentHtml;
 
-      // Bottom Navigation Tabs
       nav.innerHTML = `
         <div class="nav-tab ${currentTab === 'home' ? 'active' : ''}" onclick="setTab('home')">
           <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></span>
@@ -2142,8 +2366,8 @@
 
       const headerHtml = `
         <div class="app-header">
-          <div>
-            <p style="font-size: 11px; color: var(--slate-500); font-weight: 600;">Recruiter Workspace</p>
+          <div class="header-info-group">
+            <span class="header-subgreeting">Recruiter Workspace</span>
             <h2 class="app-brand-title">${currentUser.companyName}</h2>
           </div>
           <div class="header-user-actions">
@@ -2160,7 +2384,7 @@
       if (currentTab === 'dashboard') {
         mainContentHtml = `
           ${headerHtml}
-          <div style="padding: 14px 16px 8px;">
+          <div style="padding: 14px 16px 8px; flex-shrink: 0;">
             <h3 style="font-size: 17px; font-weight: 800; color: var(--slate-900);">Recruitment Pipeline Analytics</h3>
             <p style="font-size: 12px; color: var(--slate-500);">Live applicant statistics across published roles</p>
           </div>
@@ -2188,46 +2412,46 @@
             </div>
           </div>
 
-          <div style="padding: 0 16px 14px;">
+          <div style="padding: 0 16px 14px; flex-shrink: 0;">
             <button class="submit-btn" onclick="setTab('post')">
               <span>+ Create & Post New Internship</span>
             </button>
           </div>
 
-          <div style="padding: 0 16px 80px;">
+          <div style="padding: 0 16px 10px; flex-shrink: 0;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
               <h4 style="font-size: 14px; font-weight: 800; color: var(--slate-900);">Candidate Review Queue</h4>
               <span style="font-size: 11px; color: var(--primary); font-weight: 700; cursor: pointer;" onclick="setTab('candidates')">View All →</span>
             </div>
+          </div>
 
-            <div class="card-list" style="padding: 0;">
-              ${candidateApps.length === 0 ? `
-                <div style="background: #FFFFFF; border-radius: 14px; padding: 24px; text-align: center; border: 1px dashed var(--slate-300);">
-                  <p style="font-size: 12px; color: var(--slate-500);">No candidate submissions in queue yet.</p>
-                </div>
-              ` : candidateApps.slice(0, 4).map(app => `
-                <div class="internship-card" onclick="openCandidateReviewModal('${app.id}')">
-                  <div class="card-top">
-                    <div>
-                      <h4 class="card-title">${app.studentName}</h4>
-                      <p class="card-company">Applied for: ${app.jobTitle}</p>
-                    </div>
-                    <span class="status-pill status-${app.status}">${app.status}</span>
+          <div class="card-list">
+            ${candidateApps.length === 0 ? `
+              <div style="background: #FFFFFF; border-radius: 14px; padding: 24px; text-align: center; border: 1px dashed var(--slate-300);">
+                <p style="font-size: 12px; color: var(--slate-500);">No candidate submissions in queue yet.</p>
+              </div>
+            ` : candidateApps.slice(0, 4).map(app => `
+              <div class="internship-card" onclick="openCandidateReviewModal('${app.id}')">
+                <div class="card-top">
+                  <div>
+                    <h4 class="card-title">${app.studentName}</h4>
+                    <p class="card-company">Applied for: ${app.jobTitle}</p>
                   </div>
-                  <p style="font-size: 11px; color: var(--slate-500); margin: 4px 0 8px;">${app.studentSchool}</p>
-                  <div class="card-footer" style="margin: 0; padding-top: 6px;">
-                    <span style="font-size: 11px; color: var(--slate-400);">Click to evaluate dossier</span>
-                    <button class="apply-btn" style="padding: 5px 12px; font-size: 11px;">Review</button>
-                  </div>
+                  <span class="status-pill status-${app.status}">${app.status}</span>
                 </div>
-              `).join('')}
-            </div>
+                <p style="font-size: 11px; color: var(--slate-500); margin: 4px 0 8px;">${app.studentSchool}</p>
+                <div class="card-footer" style="margin: 0; padding-top: 6px;">
+                  <span style="font-size: 11px; color: var(--slate-400);">Click to evaluate dossier</span>
+                  <button class="apply-btn" style="padding: 5px 12px; font-size: 11px;">Review</button>
+                </div>
+              </div>
+            `).join('')}
           </div>
         `;
       } else if (currentTab === 'post') {
         mainContentHtml = `
           ${headerHtml}
-          <div style="padding: 16px 16px 90px;">
+          <div style="padding: 16px 16px calc(90px + env(safe-area-inset-bottom, 20px)); overflow-y: auto;">
             <h3 style="font-size: 18px; font-weight: 800; color: var(--slate-900); margin-bottom: 4px;">Post New Internship</h3>
             <p style="font-size: 12px; color: var(--slate-500); margin-bottom: 16px;">Multi-step publishing wizard (Step ${postJobStep} of 4)</p>
 
@@ -2327,7 +2551,7 @@
       } else if (currentTab === 'candidates') {
         mainContentHtml = `
           ${headerHtml}
-          <div style="padding: 16px 16px 10px;">
+          <div style="padding: 16px 16px 10px; flex-shrink: 0;">
             <h3 style="font-size: 18px; font-weight: 800; color: var(--slate-900);">All Candidate Dossiers</h3>
             <p style="font-size: 12px; color: var(--slate-500);">Review applications and update candidate progression</p>
           </div>
@@ -2363,7 +2587,7 @@
       } else if (currentTab === 'profile') {
         mainContentHtml = `
           ${headerHtml}
-          <div style="padding: 16px 16px 90px;">
+          <div style="padding: 16px 16px calc(90px + env(safe-area-inset-bottom, 20px)); overflow-y: auto;">
             <div style="background: #FFFFFF; border-radius: 18px; padding: 20px; border: 1px solid var(--slate-200); text-align: center; margin-bottom: 14px;">
               <div class="avatar-badge" style="width: 60px; height: 60px; margin: 0 auto 10px; font-size: 22px; background: linear-gradient(135deg, #1D4ED8, #1E40AF);">
                 ${currentUser.companyName?.[0] || 'C'}
@@ -2435,7 +2659,6 @@
     function handleSearchInput(e) {
       searchQuery = e.target.value;
       checkSessionAndRender();
-      // Keep input focused
       const activeEl = document.querySelector('.search-input');
       if (activeEl) {
         activeEl.focus();
@@ -2443,7 +2666,6 @@
       }
     }
 
-    // Post Job Wizard Navigation
     function goToPostJobStep(step) {
       if (postJobStep === 1) {
         newJobData.title = document.getElementById('postJobTitle')?.value.trim() || newJobData.title;
@@ -2495,7 +2717,6 @@
       postings.unshift(newPost);
       saveData(STORAGE_KEYS.POSTINGS, postings);
 
-      // Reset form
       newJobData = {
         title: '',
         domain: 'Technology',
@@ -2516,7 +2737,6 @@
       setTab('dashboard');
     }
 
-    // Candidate Application Flow
     function openJobDetailsModal(jobId) {
       const postings = loadData(STORAGE_KEYS.POSTINGS, SEED_POSTINGS);
       const applications = loadData(STORAGE_KEYS.APPLICATIONS, SEED_APPLICATIONS);
@@ -2607,7 +2827,6 @@
       checkSessionAndRender();
     }
 
-    // Recruiter Candidate Dossier Review Flow
     function openCandidateReviewModal(appId) {
       const applications = loadData(STORAGE_KEYS.APPLICATIONS, SEED_APPLICATIONS);
       const app = applications.find(a => a.id === appId);
@@ -2668,7 +2887,6 @@
       checkSessionAndRender();
     }
 
-    // Profile Skill Management
     function addProfileSkill() {
       const input = document.getElementById('addProfileSkillInput');
       const val = input ? input.value.trim() : '';
@@ -2679,7 +2897,6 @@
         currentUser.skills.push(val);
         saveData(STORAGE_KEYS.SESSION, currentUser);
 
-        // Update in users database
         const users = loadData(STORAGE_KEYS.USERS, SEED_USERS);
         const idx = users.findIndex(u => u.id === currentUser.id);
         if (idx !== -1) {
@@ -2708,7 +2925,6 @@
       showToast('Skill removed from profile.');
     }
 
-    // Modal Helpers
     function closeModal(e) {
       if (!e || e.target.id === 'appModal') {
         document.getElementById('appModal').classList.remove('open');
@@ -2743,13 +2959,7 @@
       }
     }
 
-    // iOS Add to Home Screen Prompt
     window.addEventListener('load', () => {
-      const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
-      const isStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
-      if (isIos && !isStandalone) {
-        document.getElementById('iosPwaBanner').style.display = 'flex';
-      }
       checkSessionAndRender();
     });
   </script>
